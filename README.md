@@ -33,6 +33,9 @@ cantidad de páginas y cantidad de libros distintos.
 
 ## Uso
 
+> **Windows:** Python no incluye la base de zonas horarias. Antes del primer uso ejecuta
+> `python -m pip install tzdata` (si falta, el sensor lo indica con un mensaje claro).
+
 ```bash
 export WEBDAV_PASSWORD=...   LSG_PASSWORD=...
 cp config.example.toml config.toml

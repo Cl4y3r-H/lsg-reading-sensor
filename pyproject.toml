@@ -7,7 +7,7 @@ name = "lsg-reading-sensor"
 version = "0.1.0"
 description = "Sensor de ocio lector (KOReader) para LifeSync-Games"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["tzdata; sys_platform == 'win32'"]   # solo en Windows: base de zonas horarias
 
 [project.scripts]
 lsg-reading-sensor = "lsg_reading_sensor.cli:main"

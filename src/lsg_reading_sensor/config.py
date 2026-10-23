@@ -5,11 +5,22 @@ import os
 import tomllib
 from dataclasses import dataclass
 from pathlib import Path
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 
 class ConfigError(Exception):
     pass
+
+
+def _load_timezone(name: str) -> ZoneInfo:
+    """En Windows, Python no trae la base de zonas horarias: se obtiene del paquete tzdata."""
+    try:
+        return ZoneInfo(name)
+    except ZoneInfoNotFoundError:
+        raise ConfigError(
+            f"No se encontró la zona horaria '{name}'. En Windows instala la base de zonas "
+            "horarias con:  python -m pip install tzdata"
+        ) from None
 
 
 def _env(name: str) -> str:
@@ -111,7 +122,7 @@ def load_config(path: str | Path) -> SensorConfig:
         raise ConfigError("send_webhook requiere lsg.sensor_endpoint_id")
 
     return SensorConfig(
-        timezone=ZoneInfo(sensor.get("timezone", "America/Santiago")),
+        timezone=_load_timezone(sensor.get("timezone", "America/Santiago")),
         state_db=Path(sensor.get("state_db", "reading_state.sqlite3")).expanduser(),
         poll_interval_minutes=int(sensor.get("poll_interval_minutes", 30)),
         start_date=sensor.get("start_date"),
