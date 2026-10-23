@@ -1,0 +1,42 @@
+# Copiar como config.toml y completar.
+# Secretos en variables de entorno, NUNCA en este archivo:
+#   WEBDAV_PASSWORD → contraseña del WebDAV donde KOReader sube sus estadísticas
+#   LSG_PASSWORD    → contraseña de LifeSync-Games
+
+[sensor]
+timezone = "America/Santiago"
+state_db = "reading_state.sqlite3"
+poll_interval_minutes = 30
+start_date = "2026-10-13"
+
+[rules]
+minutes_per_block = 30          # P = floor(T / 30) * 5   (GDD §2)
+points_per_block = 5
+daily_cap = 20
+max_gap_minutes = 5             # pausa máxima tolerada dentro de un bloque continuo
+min_page_seconds = 3            # páginas más cortas se descartan
+max_page_seconds = 300          # una página no aporta más de 5 min
+max_future_skew_seconds = 300
+
+[source]
+# En KOReader: Herramientas → Estadísticas de lectura → Ajustes → Sincronización en la nube (WebDAV)
+mode = "webdav"                 # webdav | file
+webdav_url = "https://webdav.ejemplo.cl/koreader/statistics.sqlite3"
+webdav_user = ""
+webdav_password_env = "WEBDAV_PASSWORD"
+# mode = "file"
+# file_path = "~/Descargas/statistics.sqlite3"
+lookback_days = 7               # días que se recalculan en cada pasada
+
+[lsg]
+auth_url = "https://lsg.diinf.usach.cl/lsg-auth"
+core_url = "https://lsg.diinf.usach.cl/lsg-core-api"
+email = ""
+password_env = "LSG_PASSWORD"
+sensor_endpoint_id = 0
+players_sensor_endpoint_id = 0
+send_webhook = false
+attribute_id = 5                # PENDIENTE: Lingüístico (5) o Mental (4)
+point_dimension_id = 0          # confirmar con el laboratorio
+credit_strategy = "dry_run"     # dry_run | offline_sync | adjust
+# game_id = 0
